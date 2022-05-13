@@ -2,7 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+const { isLoggedIn } = require('../middleware');
+
+router.get('/', isLoggedIn, (req, res) => {
+  console.log(req.user);
   res.send('Route');
 });
 

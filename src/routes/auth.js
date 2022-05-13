@@ -3,6 +3,7 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { dbConfig } = require('../config');
 
@@ -63,7 +64,8 @@ router.post('/login', async (req, res) => {
     const isAuthed = bcrypt.compareSync(userData.password, data[0].password);
 
     if (isAuthed) {
-      return res.send('OK');
+      const token = jwt.sign({ id: data[0].id, email: data[0].email }, 'abc123');
+      return res.send({ msg: 'Successfully logged in', token });
     }
 
     return res.status(400).send({ err: 'Incorrect email or password' });
